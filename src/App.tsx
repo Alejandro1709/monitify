@@ -1,9 +1,8 @@
 import { useState } from 'react'
-
 import Header from '@/components/header'
 import ToolBar from '@/components/toolbar'
-import CategoryFilter from './components/subscriptions/category-filter'
-import { type SubscriptionCategory } from './types/subscription'
+import SubscriptionsView from '@/components/subscriptions/subscriptions-view'
+import { type SubscriptionCategory } from '@/types/subscription'
 
 function App() {
   const [viewMode, setViewMode] = useState<'subscriptions' | 'expenses'>(
@@ -22,14 +21,10 @@ function App() {
         <ToolBar mode={viewMode} onModeChange={setViewMode} />
 
         {viewMode === 'subscriptions' ? (
-          <>
-            <CategoryFilter
-              selectedCategory={selectedSubCategory}
-              onCategoryChange={setSelectedSubCategory}
-            />
-
-            <h2>Subscriptions</h2>
-          </>
+          <SubscriptionsView
+            selectedCategory={selectedSubCategory}
+            onCategoryChange={setSelectedSubCategory}
+          />
         ) : (
           <>
             <h2>Expenses</h2>
