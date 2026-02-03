@@ -2,16 +2,11 @@ import { useState } from 'react'
 import Header from '@/components/header'
 import ToolBar from '@/components/toolbar'
 import SubscriptionsView from '@/components/subscriptions/subscriptions-view'
-import { type SubscriptionCategory } from '@/types/subscription'
 
 function App() {
   const [viewMode, setViewMode] = useState<'subscriptions' | 'expenses'>(
     'subscriptions',
   )
-
-  const [selectedSubCategory, setSelectedSubCategory] = useState<
-    SubscriptionCategory | 'all'
-  >('all')
 
   return (
     <div className="min-h-screen bg-background">
@@ -21,10 +16,7 @@ function App() {
         <ToolBar mode={viewMode} onModeChange={setViewMode} />
 
         {viewMode === 'subscriptions' ? (
-          <SubscriptionsView
-            selectedCategory={selectedSubCategory}
-            onCategoryChange={setSelectedSubCategory}
-          />
+          <SubscriptionsView />
         ) : (
           <>
             <h2>Expenses</h2>

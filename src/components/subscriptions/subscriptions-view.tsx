@@ -1,20 +1,32 @@
+import { useState } from 'react'
+import { AnimatePresence } from 'motion/react'
 import CategoryFilter from '@/components/subscriptions/category-filter'
-import type { SubscriptionCategory } from '@/types/subscription'
+import type { Subscription, SubscriptionCategory } from '@/types/subscription'
+import EmptyState from './empty-state'
 
-interface Props {
-  selectedCategory: SubscriptionCategory | 'all'
-  onCategoryChange: (category: SubscriptionCategory | 'all') => void
-}
+function SubscriptionsView() {
+  const [subscriptions, setSubscriptions] = useState<Subscription[]>([])
 
-function SubscriptionsView({ selectedCategory, onCategoryChange }: Props) {
+  const [selectedCategory, setSelectedCategory] = useState<
+    SubscriptionCategory | 'all'
+  >('all')
+
   return (
     <div>
       <CategoryFilter
         selectedCategory={selectedCategory}
-        onCategoryChange={onCategoryChange}
+        onCategoryChange={setSelectedCategory}
       />
 
-      <h2>Subscriptions</h2>
+      {subscriptions.length === 0 ? (
+        <EmptyState />
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <AnimatePresence mode="popLayout">
+            <SubscriptionCard />
+          </AnimatePresence>
+        </div>
+      )}
     </div>
   )
 }
