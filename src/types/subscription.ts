@@ -41,3 +41,14 @@ export const categoryLabels: Record<SubscriptionCategory, string> = {
   education: 'Educación',
   other: 'Otros',
 }
+
+export const currencySymbols: Record<Currency, string> = {
+  USD: '$',
+  PEN: 'S/',
+}
+
+export const statusLabels: Record<SubscriptionStatus, string> = {
+  active: 'Activa',
+  paused: 'Pausada',
+  cancelled: 'Cancelada',
+}
