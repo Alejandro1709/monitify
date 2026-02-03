@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { AnimatePresence } from 'motion/react'
 import CategoryFilter from '@/components/subscriptions/category-filter'
+import EmptyState from '@/components/subscriptions/empty-state'
 import type { Subscription, SubscriptionCategory } from '@/types/subscription'
-import EmptyState from './empty-state'
 
 function SubscriptionsView() {
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([])
