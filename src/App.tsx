@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Header from '@/components/header'
 import ToolBar from '@/components/toolbar'
 import SubscriptionsView from '@/components/subscriptions/subscriptions-view'
+import ExpensesView from '@/components/expenses/expenses-view'
 
 function App() {
   const [viewMode, setViewMode] = useState<'subscriptions' | 'expenses'>(
@@ -19,7 +20,7 @@ function App() {
           <SubscriptionsView />
         ) : (
           <>
-            <h2>Expenses</h2>
+            <ExpensesView />
           </>
         )}
       </main>

@@ -13,9 +13,15 @@ function ToolBar({ mode, onModeChange }: Props) {
     <div className="flex flex-row justify-between items-center gap-4 mb-6">
       <ModeToggler mode={mode} onModeChange={onModeChange} />
 
-      <Button variant="outline" onClick={() => {}} className="cursor-pointer">
-        Nueva Suscripción
-      </Button>
+      {mode === 'subscriptions' ? (
+        <Button variant="outline" onClick={() => {}} className="cursor-pointer">
+          Nueva Suscripción
+        </Button>
+      ) : (
+        <Button variant="outline" onClick={() => {}} className="cursor-pointer">
+          Nuevo Gasto
+        </Button>
+      )}
     </div>
   )
 }
