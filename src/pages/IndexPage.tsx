@@ -3,15 +3,22 @@ import ExpensesView from '@/components/expenses/expenses-view'
 import SubscriptionsView from '@/components/subscriptions/subscriptions-view'
 import ToolBar from '@/components/toolbar'
 import SubscriptionDialog from '@/components/subscriptions/subscription-dialog'
+import ExpenseDialog from '@/components/expenses/expense-dialog'
 import { useViewModeStore } from '@/stores/useViewModeStore'
 import { useSubscriptionDialogStore } from '@/stores/useSubscriptionDialogStore'
 import { useSubscriptionsStore } from '@/stores/useSubscriptionsStore'
+import { useExpenseDialogStore } from '@/stores/useExpenseDialogStore'
+import { useExpensesStore } from '@/stores/useExpensesStore'
 import type { Subscription, SubscriptionCategory } from '@/types/subscription'
+import type { Expense, ExpenseCategory } from '@/types/expense'
 
 function IndexPage() {
+  // View Mode
   const viewMode = useViewModeStore((state) => state.viewMode)
 
+  // Subscriptions
   const subscriptions = useSubscriptionsStore((state) => state.subscriptions)
+
   const editingSubscription = useSubscriptionsStore(
     (state) => state.editingSubscription,
   )
@@ -34,6 +41,22 @@ function IndexPage() {
 
   const changeIsOpen = useSubscriptionDialogStore((state) => state.changeIsOpen)
 
+  const changeExpenseDialogIsOpen = useExpenseDialogStore(
+    (state) => state.changeIsOpen,
+  )
+
+  const expenses = useExpensesStore((state) => state.expenses)
+
+  const editingExpense = useExpensesStore((state) => state.editingExpense)
+
+  const setEditingExpense = useExpensesStore((state) => state.setEditingExpense)
+
+  const addExpense = useExpensesStore((state) => state.addExpense)
+
+  const updateExpense = useExpensesStore((state) => state.updateExpense)
+
+  const removeExpense = useExpensesStore((state) => state.removeExpense)
+
   const subCategoryCounts = useMemo(() => {
     const counts: Record<SubscriptionCategory | 'all', number> = {
       all: subscriptions.length,
@@ -55,9 +78,31 @@ function IndexPage() {
     return counts
   }, [subscriptions])
 
+  const expCategoryCounts = useMemo(() => {
+    const counts: Record<ExpenseCategory | 'all', number> = {
+      all: expenses.length,
+      food: 0,
+      transport: 0,
+      shopping: 0,
+      entertainment: 0,
+      health: 0,
+      utilities: 0,
+      other: 0,
+    }
+    expenses.forEach((exp) => {
+      counts[exp.category]++
+    })
+    return counts
+  }, [expenses])
+
   const handleAddSubscription = () => {
     setEditingSubscription(null)
     changeIsOpen(true)
+  }
+
+  const handleAddExpense = () => {
+    setEditingExpense(null)
+    changeExpenseDialogIsOpen(true)
   }
 
   const handleEditSubscription = (subscription: Subscription) => {
@@ -65,8 +110,14 @@ function IndexPage() {
     changeIsOpen(true)
   }
 
+  const handleEditExpense = (expense: Expense) => {
+    setEditingExpense(expense)
+    changeExpenseDialogIsOpen(true)
+  }
+
   const handleToggleStatus = (id: string) => {
     const subscription = subscriptions.find((s) => s.id === id)
+
     if (subscription) {
       updateSubscription(id, {
         status: subscription.status === 'active' ? 'paused' : 'active',
@@ -91,6 +142,21 @@ function IndexPage() {
     }
   }
 
+  const handleSubmitExpense = (data: Omit<Expense, 'id' | 'createdAt'>) => {
+    if (editingExpense) {
+      updateExpense(editingExpense.id, data)
+      setEditingExpense(null)
+    } else {
+      const newExpense: Expense = {
+        ...data,
+        id: crypto.randomUUID(),
+        createdAt: new Date().toISOString(),
+      }
+
+      addExpense(newExpense)
+    }
+  }
+
   return (
     <>
       <ToolBar />
@@ -105,13 +171,21 @@ function IndexPage() {
           onAddClick={handleAddSubscription}
         />
       ) : (
-        <ExpensesView />
+        <ExpensesView
+          expenses={expenses}
+          counts={expCategoryCounts}
+          onEdit={handleEditExpense}
+          onDelete={removeExpense}
+          onAddClick={handleAddExpense}
+        />
       )}
 
       <SubscriptionDialog
         subscription={editingSubscription}
         onSubmit={handleSubmitSubscription}
       />
+
+      <ExpenseDialog expense={editingExpense} onSubmit={handleSubmitExpense} />
     </>
   )
 }

@@ -6,6 +6,8 @@ import {
   expenseCategoryIcons,
   currencySymbols,
 } from '@/types/expense'
+import { format } from 'date-fns'
+import { es } from 'date-fns/locale'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,7 +29,7 @@ function ExpenseCard({ expense, onEdit, onDelete }: Props) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
-      className="bg-card rounded-xl p-4 card-shadow hover:shadow-lg transition-shadow"
+      className="bg-card rounded-xl p-4 border border-border shadow hover:shadow-lg transition-shadow"
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -39,7 +41,8 @@ function ExpenseCard({ expense, onEdit, onDelete }: Props) {
               {expense.description}
             </h3>
             <p className="text-sm text-muted-foreground">
-              {expenseCategoryLabels[expense.category]} • DATE
+              {expenseCategoryLabels[expense.category]} •{' '}
+              {format(new Date(expense.date), 'dd MMM yyyy', { locale: es })}
             </p>
           </div>
         </div>
@@ -73,9 +76,13 @@ function ExpenseCard({ expense, onEdit, onDelete }: Props) {
         </div>
       </div>
 
-      {expense.notes && (
+      {expense.notes ? (
         <p className="text-sm text-muted-foreground mt-2 line-clamp-2">
           {expense.notes}
+        </p>
+      ) : (
+        <p className="text-sm text-muted-foreground mt-2 line-clamp-2">
+          Este gasto no tiene notas
         </p>
       )}
     </motion.div>

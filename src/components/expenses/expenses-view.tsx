@@ -5,9 +5,21 @@ import EmptyState from '@/components/expenses/empty-state'
 import ExpenseCard from '@/components/expenses/expense-card'
 import type { Expense, ExpenseCategory } from '@/types/expense'
 
-function ExpensesView() {
-  const [expenses, setExpenses] = useState<Expense[]>([])
+interface Props {
+  expenses: Expense[]
+  counts: Record<ExpenseCategory | 'all', number>
+  onEdit: (expense: Expense) => void
+  onDelete: (id: string) => void
+  onAddClick: () => void
+}
 
+function ExpensesView({
+  expenses,
+  counts,
+  onEdit,
+  onDelete,
+  onAddClick,
+}: Props) {
   const [selectedCategory, setSelectedCategory] = useState<
     ExpenseCategory | 'all'
   >('all')
@@ -16,11 +28,12 @@ function ExpensesView() {
     <div className="space-y-6">
       <ExpenseFilter
         selected={selectedCategory}
+        counts={counts}
         onChange={setSelectedCategory}
       />
 
       {expenses.length === 0 ? (
-        <EmptyState />
+        <EmptyState onAddClick={onAddClick} />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <AnimatePresence mode="popLayout">
@@ -28,8 +41,8 @@ function ExpensesView() {
               <ExpenseCard
                 key={expense.id}
                 expense={expense}
-                onEdit={() => {}}
-                onDelete={() => {}}
+                onEdit={() => onEdit(expense)}
+                onDelete={() => onDelete(expense.id)}
               />
             ))}
           </AnimatePresence>
