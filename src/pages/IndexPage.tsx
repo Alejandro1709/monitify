@@ -9,7 +9,7 @@ import { useSubscriptionDialogStore } from '@/stores/useSubscriptionDialogStore'
 import { useSubscriptionsStore } from '@/stores/useSubscriptionsStore'
 import { useExpenseDialogStore } from '@/stores/useExpenseDialogStore'
 import type { Subscription, SubscriptionCategory } from '@/types/subscription'
-import type { Expense } from '@/types/expense'
+import type { Expense, ExpenseCategory } from '@/types/expense'
 
 function IndexPage() {
   // View Mode
@@ -66,6 +66,23 @@ function IndexPage() {
 
     return counts
   }, [subscriptions])
+
+  const expCategoryCounts = useMemo(() => {
+    const counts: Record<ExpenseCategory | 'all', number> = {
+      all: expenses.length,
+      food: 0,
+      transport: 0,
+      shopping: 0,
+      entertainment: 0,
+      health: 0,
+      utilities: 0,
+      other: 0,
+    }
+    expenses.forEach((exp) => {
+      counts[exp.category]++
+    })
+    return counts
+  }, [expenses])
 
   const handleAddSubscription = () => {
     setEditingSubscription(null)
@@ -132,7 +149,11 @@ function IndexPage() {
           onAddClick={handleAddSubscription}
         />
       ) : (
-        <ExpensesView expenses={expenses} onAddClick={handleAddExpense} />
+        <ExpensesView
+          expenses={expenses}
+          counts={expCategoryCounts}
+          onAddClick={handleAddExpense}
+        />
       )}
 
       <SubscriptionDialog

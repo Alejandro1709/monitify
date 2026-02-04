@@ -76,9 +76,13 @@ function ExpenseCard({ expense, onEdit, onDelete }: Props) {
         </div>
       </div>
 
-      {expense.notes && (
+      {expense.notes ? (
         <p className="text-sm text-muted-foreground mt-2 line-clamp-2">
           {expense.notes}
+        </p>
+      ) : (
+        <p className="text-sm text-muted-foreground mt-2 line-clamp-2">
+          Este gasto no tiene notas
         </p>
       )}
     </motion.div>

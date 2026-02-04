@@ -8,6 +8,7 @@ import {
 
 interface Props {
   selected: ExpenseCategory | 'all'
+  counts: Record<ExpenseCategory | 'all', number>
   onChange: (category: ExpenseCategory | 'all') => void
 }
 
@@ -22,7 +23,7 @@ const categories: (ExpenseCategory | 'all')[] = [
   'other',
 ]
 
-function ExpenseFilter({ selected, onChange }: Props) {
+function ExpenseFilter({ selected, counts, onChange }: Props) {
   return (
     <div className="flex flex-wrap gap-2">
       {categories.map((category) => {
@@ -30,7 +31,7 @@ function ExpenseFilter({ selected, onChange }: Props) {
         const label =
           category === 'all' ? 'Todos' : expenseCategoryLabels[category]
         const icon = category === 'all' ? '📋' : expenseCategoryIcons[category]
-        // const count = counts[category]
+        const count = counts[category]
 
         return (
           <motion.button
@@ -53,7 +54,7 @@ function ExpenseFilter({ selected, onChange }: Props) {
                 isSelected ? 'bg-primary-foreground/20' : 'bg-background',
               )}
             >
-              3
+              ({count})
             </span>
           </motion.button>
         )

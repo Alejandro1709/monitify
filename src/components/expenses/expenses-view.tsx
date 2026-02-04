@@ -7,10 +7,11 @@ import type { Expense, ExpenseCategory } from '@/types/expense'
 
 interface Props {
   expenses: Expense[]
+  counts: Record<ExpenseCategory | 'all', number>
   onAddClick: () => void
 }
 
-function ExpensesView({ expenses, onAddClick }: Props) {
+function ExpensesView({ expenses, counts, onAddClick }: Props) {
   const [selectedCategory, setSelectedCategory] = useState<
     ExpenseCategory | 'all'
   >('all')
@@ -19,6 +20,7 @@ function ExpensesView({ expenses, onAddClick }: Props) {
     <div className="space-y-6">
       <ExpenseFilter
         selected={selectedCategory}
+        counts={counts}
         onChange={setSelectedCategory}
       />
 
