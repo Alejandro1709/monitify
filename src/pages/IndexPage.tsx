@@ -4,17 +4,41 @@ import SubscriptionsView from '@/components/subscriptions/subscriptions-view'
 import ToolBar from '@/components/toolbar'
 import SubscriptionDialog from '@/components/subscriptions/subscription-dialog'
 import { useViewModeStore } from '@/stores/useViewModeStore'
+import defaultSubscriptions from '@/data/subscriptions'
+import { useSubscriptionDialogStore } from '@/stores/useSubscriptionDialogStore'
+import type { Subscription } from '@/types/subscription'
 
 function IndexPage() {
   const viewMode = useViewModeStore((state) => state.viewMode)
 
-  const [isSubDialogOpen, setIsSubDialogOpen] = useState<boolean>(false)
+  const [subscriptions, setSubscriptions] =
+    useState<Subscription[]>(defaultSubscriptions)
 
-  const handleOpenDialog = () => {
-    if (viewMode === 'subscriptions') {
-      setIsSubDialogOpen(true)
-      return
+  const changeIsOpen = useSubscriptionDialogStore((state) => state.changeIsOpen)
+
+  const handleAddSubscription = () => {
+    // setEditingSubscription(null)
+    changeIsOpen(true)
+  }
+
+  const handleSubmitSubscription = (
+    data: Omit<Subscription, 'id' | 'createdAt'>,
+  ) => {
+    // if (editingSubscription) {
+    //   updateSubscription(editingSubscription.id, data)
+    // } else {
+    //   addSubscription(data)
+    // }
+
+    // Add subscription logic goes here
+
+    const newSubscription: Subscription = {
+      ...data,
+      id: crypto.randomUUID(),
+      createdAt: new Date().toISOString(),
     }
+
+    setSubscriptions((prev) => [...prev, newSubscription])
   }
 
   return (
@@ -22,17 +46,15 @@ function IndexPage() {
       <ToolBar />
 
       {viewMode === 'subscriptions' ? (
-        <SubscriptionsView onAddClick={handleOpenDialog} />
+        <SubscriptionsView
+          subscriptions={subscriptions}
+          onAddClick={handleAddSubscription}
+        />
       ) : (
-        <>
-          <ExpensesView />
-        </>
+        <ExpensesView />
       )}
 
-      <SubscriptionDialog
-        open={isSubDialogOpen}
-        onOpenChange={setIsSubDialogOpen}
-      />
+      <SubscriptionDialog onSubmit={handleSubmitSubscription} />
     </>
   )
 }

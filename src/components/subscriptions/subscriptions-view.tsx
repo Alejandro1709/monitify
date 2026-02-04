@@ -3,17 +3,14 @@ import { AnimatePresence } from 'motion/react'
 import CategoryFilter from '@/components/subscriptions/category-filter'
 import EmptyState from '@/components/subscriptions/empty-state'
 import SubscriptionCard from '@/components/subscriptions/subscription-card'
-import defaultSubscriptions from '@/data/subscriptions'
 import type { Subscription, SubscriptionCategory } from '@/types/subscription'
 
 interface Props {
+  subscriptions: Subscription[]
   onAddClick: () => void
 }
 
-function SubscriptionsView({ onAddClick }: Props) {
-  const [subscriptions, setSubscriptions] =
-    useState<Subscription[]>(defaultSubscriptions)
-
+function SubscriptionsView({ subscriptions, onAddClick }: Props) {
   const [selectedCategory, setSelectedCategory] = useState<
     SubscriptionCategory | 'all'
   >('all')

@@ -1,16 +1,23 @@
 import { Button } from '@/components/ui/button'
 import ModeToggler from '@/components/mode-toggler'
 import { useViewModeStore } from '@/stores/useViewModeStore'
+import { useSubscriptionDialogStore } from '@/stores/useSubscriptionDialogStore'
 
 function ToolBar() {
   const viewMode = useViewModeStore((state) => state.viewMode)
+
+  const changeIsOpen = useSubscriptionDialogStore((state) => state.changeIsOpen)
 
   return (
     <div className="flex flex-row justify-between items-center gap-4 mb-6">
       <ModeToggler />
 
       {viewMode === 'subscriptions' ? (
-        <Button variant="outline" onClick={() => {}} className="cursor-pointer">
+        <Button
+          variant="outline"
+          onClick={() => changeIsOpen(true)}
+          className="cursor-pointer"
+        >
           Nueva Suscripción
         </Button>
       ) : (

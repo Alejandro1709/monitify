@@ -24,6 +24,7 @@ import {
   type SubscriptionCategory,
   categoryLabels,
 } from '@/types/subscription'
+import { useSubscriptionDialogStore } from '@/stores/useSubscriptionDialogStore'
 
 const subscriptionSchema = z.object({
   name: z.string().min(1, 'El nombre es requerido'),
@@ -54,8 +55,6 @@ const subscriptionSchema = z.object({
 export type FormData = z.infer<typeof subscriptionSchema>
 
 interface Props {
-  open: boolean
-  onOpenChange: (open: boolean) => void
   subscription?: Subscription | null
   onSubmit: (data: Omit<Subscription, 'id' | 'createdAt'>) => void
 }
@@ -73,12 +72,10 @@ const predefinedColors = [
   '#007AFF',
 ]
 
-function CreateSubscriptionForm({
-  open,
-  onOpenChange,
-  subscription,
-  onSubmit,
-}: Props) {
+function CreateSubscriptionForm({ subscription, onSubmit }: Props) {
+  const isOpen = useSubscriptionDialogStore((state) => state.isOpen)
+  const changeIsOpen = useSubscriptionDialogStore((state) => state.changeIsOpen)
+
   const form = useForm<FormData>({
     resolver: zodResolver(subscriptionSchema),
     defaultValues: {
@@ -124,11 +121,11 @@ function CreateSubscriptionForm({
           predefinedColors[Math.floor(Math.random() * predefinedColors.length)],
       })
     }
-  }, [subscription, open, form])
+  }, [subscription, isOpen, form])
 
   const handleSubmit = (data: FormData) => {
     onSubmit(data as Omit<Subscription, 'id' | 'createdAt'>)
-    onOpenChange(false)
+    changeIsOpen(false)
   }
 
   return (
@@ -352,7 +349,7 @@ function CreateSubscriptionForm({
           <Button
             type="button"
             variant="outline"
-            onClick={() => onOpenChange(false)}
+            onClick={() => changeIsOpen(false)}
           >
             Cancelar
           </Button>

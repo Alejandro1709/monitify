@@ -5,28 +5,20 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import CreateSubscriptionForm, {
-  type FormData,
-} from '@/components/subscriptions/create-subscription-form'
+import CreateSubscriptionForm from '@/components/subscriptions/create-subscription-form'
+import { useSubscriptionDialogStore } from '@/stores/useSubscriptionDialogStore'
 
 interface Props {
-  open: boolean
   subscription?: Subscription | null
-  onOpenChange: (open: boolean) => void
+  onSubmit: (data: Omit<Subscription, 'id' | 'createdAt'>) => void
 }
 
-function SubscriptionDialog({ open, subscription, onOpenChange }: Props) {
-  const handleCreateSubscription = (data: FormData) => {
-    if (subscription) {
-      // updateSubscription(editingSubscription.id, data);
-    } else {
-      // create subscription
-      console.log(data)
-    }
-  }
+function SubscriptionDialog({ subscription, onSubmit }: Props) {
+  const isOpen = useSubscriptionDialogStore((state) => state.isOpen)
+  const changeIsOpen = useSubscriptionDialogStore((state) => state.changeIsOpen)
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={isOpen} onOpenChange={changeIsOpen}>
       <DialogContent className="sm:max-w-125" aria-describedby="">
         <DialogHeader>
           <DialogTitle>
@@ -34,11 +26,7 @@ function SubscriptionDialog({ open, subscription, onOpenChange }: Props) {
           </DialogTitle>
         </DialogHeader>
 
-        <CreateSubscriptionForm
-          open={open}
-          onOpenChange={onOpenChange}
-          onSubmit={handleCreateSubscription}
-        />
+        <CreateSubscriptionForm onSubmit={onSubmit} />
       </DialogContent>
     </Dialog>
   )
