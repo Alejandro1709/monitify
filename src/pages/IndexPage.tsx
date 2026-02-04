@@ -27,6 +27,10 @@ function IndexPage() {
     (state) => state.updateSubscription,
   )
 
+  const removeSubscription = useSubscriptionsStore(
+    (state) => state.removeSubscription,
+  )
+
   const changeIsOpen = useSubscriptionDialogStore((state) => state.changeIsOpen)
 
   const subCategoryCounts = useMemo(() => {
@@ -85,6 +89,7 @@ function IndexPage() {
           subscriptions={subscriptions}
           counts={subCategoryCounts}
           onEdit={handleEditSubscription}
+          onDelete={removeSubscription}
           onAddClick={handleAddSubscription}
         />
       ) : (

@@ -8,6 +8,7 @@ interface Store {
   addSubscription: (subscription: Subscription) => void
   setEditingSubscription: (subscription: Subscription | null) => void
   updateSubscription: (id: string, updates: Partial<Subscription>) => void
+  removeSubscription: (id: string) => void
 }
 
 export const useSubscriptionsStore = create<Store>()(
@@ -27,10 +28,10 @@ export const useSubscriptionsStore = create<Store>()(
             sub.id === id ? { ...sub, ...updates } : sub,
           ),
         })),
-      // removeSub: (id) =>
-      //   set((state) => ({
-      //     subscriptions: state.subscriptions.filter((s) => s.id !== id),
-      //   })),
+      removeSubscription: (id) =>
+        set((state) => ({
+          subscriptions: state.subscriptions.filter((sub) => sub.id !== id),
+        })),
     }),
     { name: 'subscriptions' },
   ),
