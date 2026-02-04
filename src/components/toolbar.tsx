@@ -1,33 +1,20 @@
 import { Button } from '@/components/ui/button'
 import ModeToggler from '@/components/mode-toggler'
+import { useViewModeStore } from '@/stores/useViewModeStore'
 
-interface Props {
-  mode: 'subscriptions' | 'expenses'
-  onModeChange: React.Dispatch<
-    React.SetStateAction<'subscriptions' | 'expenses'>
-  >
-  onAddClick: () => void
-}
+function ToolBar() {
+  const viewMode = useViewModeStore((state) => state.viewMode)
 
-function ToolBar({ mode, onAddClick, onModeChange }: Props) {
   return (
     <div className="flex flex-row justify-between items-center gap-4 mb-6">
-      <ModeToggler mode={mode} onModeChange={onModeChange} />
+      <ModeToggler />
 
-      {mode === 'subscriptions' ? (
-        <Button
-          variant="outline"
-          onClick={onAddClick}
-          className="cursor-pointer"
-        >
+      {viewMode === 'subscriptions' ? (
+        <Button variant="outline" onClick={() => {}} className="cursor-pointer">
           Nueva Suscripción
         </Button>
       ) : (
-        <Button
-          variant="outline"
-          onClick={onAddClick}
-          className="cursor-pointer"
-        >
+        <Button variant="outline" onClick={() => {}} className="cursor-pointer">
           Nuevo Gasto
         </Button>
       )}

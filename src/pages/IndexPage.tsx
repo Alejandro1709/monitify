@@ -3,14 +3,12 @@ import ExpensesView from '@/components/expenses/expenses-view'
 import SubscriptionsView from '@/components/subscriptions/subscriptions-view'
 import ToolBar from '@/components/toolbar'
 import SubscriptionDialog from '@/components/subscriptions/subscription-dialog'
+import { useViewModeStore } from '@/stores/useViewModeStore'
 
 function IndexPage() {
-  const [viewMode, setViewMode] = useState<'subscriptions' | 'expenses'>(
-    'subscriptions',
-  )
+  const viewMode = useViewModeStore((state) => state.viewMode)
 
   const [isSubDialogOpen, setIsSubDialogOpen] = useState<boolean>(false)
-  // const [isExpDialogOpen, setIsExpDialogOpen] = useState<boolean>(false)
 
   const handleOpenDialog = () => {
     if (viewMode === 'subscriptions') {
@@ -21,11 +19,7 @@ function IndexPage() {
 
   return (
     <>
-      <ToolBar
-        mode={viewMode}
-        onModeChange={setViewMode}
-        onAddClick={handleOpenDialog}
-      />
+      <ToolBar />
 
       {viewMode === 'subscriptions' ? (
         <SubscriptionsView onAddClick={handleOpenDialog} />

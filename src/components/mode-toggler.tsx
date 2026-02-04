@@ -1,27 +1,24 @@
 import { motion } from 'motion/react'
 import { CreditCard, Receipt } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useViewModeStore } from '@/stores/useViewModeStore'
 
-interface Props {
-  mode: 'subscriptions' | 'expenses'
-  onModeChange: React.Dispatch<
-    React.SetStateAction<'subscriptions' | 'expenses'>
-  >
-}
+function ModeToggler() {
+  const viewMode = useViewModeStore((state) => state.viewMode)
+  const changeViewMode = useViewModeStore((state) => state.changeViewMode)
 
-function ModeToggler({ mode, onModeChange }: Props) {
   return (
     <div className="inline-flex bg-muted rounded-lg p-1">
       <button
-        onClick={() => onModeChange('subscriptions')}
+        onClick={() => changeViewMode('subscriptions')}
         className={cn(
           'relative px-4 py-2 text-sm font-medium rounded-md transition-colors flex items-center gap-2',
-          mode === 'subscriptions'
+          viewMode === 'subscriptions'
             ? 'text-foreground'
             : 'text-muted-foreground hover:text-foreground',
         )}
       >
-        {mode === 'subscriptions' && (
+        {viewMode === 'subscriptions' && (
           <motion.div
             layoutId="activeTab"
             className="absolute inset-0 bg-background rounded-md shadow-sm"
@@ -34,15 +31,15 @@ function ModeToggler({ mode, onModeChange }: Props) {
       </button>
 
       <button
-        onClick={() => onModeChange('expenses')}
+        onClick={() => changeViewMode('expenses')}
         className={cn(
           'relative px-4 py-2 text-sm font-medium rounded-md transition-colors flex items-center gap-2',
-          mode === 'expenses'
+          viewMode === 'expenses'
             ? 'text-foreground'
             : 'text-muted-foreground hover:text-foreground',
         )}
       >
-        {mode === 'expenses' && (
+        {viewMode === 'expenses' && (
           <motion.div
             layoutId="activeTab"
             className="absolute inset-0 bg-background rounded-md shadow-sm"

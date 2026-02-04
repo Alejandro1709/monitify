@@ -21,6 +21,7 @@ function SubscriptionDialog({ open, subscription, onOpenChange }: Props) {
       // updateSubscription(editingSubscription.id, data);
     } else {
       // create subscription
+      console.log(data)
     }
   }
 
