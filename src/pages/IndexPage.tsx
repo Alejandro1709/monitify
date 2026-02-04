@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import ExpensesView from '@/components/expenses/expenses-view'
 import SubscriptionsView from '@/components/subscriptions/subscriptions-view'
 import ToolBar from '@/components/toolbar'
@@ -6,7 +6,7 @@ import SubscriptionDialog from '@/components/subscriptions/subscription-dialog'
 import { useViewModeStore } from '@/stores/useViewModeStore'
 import defaultSubscriptions from '@/data/subscriptions'
 import { useSubscriptionDialogStore } from '@/stores/useSubscriptionDialogStore'
-import type { Subscription } from '@/types/subscription'
+import type { Subscription, SubscriptionCategory } from '@/types/subscription'
 
 function IndexPage() {
   const viewMode = useViewModeStore((state) => state.viewMode)
@@ -14,31 +14,62 @@ function IndexPage() {
   const [subscriptions, setSubscriptions] =
     useState<Subscription[]>(defaultSubscriptions)
 
+  const [editingSubscription, setEditingSubscription] =
+    useState<Subscription | null>(null)
+
+  const subCategoryCounts = useMemo(() => {
+    const counts: Record<SubscriptionCategory | 'all', number> = {
+      all: subscriptions.length,
+      streaming: 0,
+      music: 0,
+      gaming: 0,
+      productivity: 0,
+      cloud: 0,
+      fitness: 0,
+      news: 0,
+      education: 0,
+      other: 0,
+    }
+
+    subscriptions.forEach((sub) => {
+      counts[sub.category]++
+    })
+
+    return counts
+  }, [subscriptions])
+
   const changeIsOpen = useSubscriptionDialogStore((state) => state.changeIsOpen)
 
   const handleAddSubscription = () => {
-    // setEditingSubscription(null)
+    setEditingSubscription(null)
+    changeIsOpen(true)
+  }
+  const handleEditSubscription = (subscription: Subscription) => {
+    setEditingSubscription(subscription)
     changeIsOpen(true)
   }
 
   const handleSubmitSubscription = (
     data: Omit<Subscription, 'id' | 'createdAt'>,
   ) => {
-    // if (editingSubscription) {
-    //   updateSubscription(editingSubscription.id, data)
-    // } else {
-    //   addSubscription(data)
-    // }
+    if (editingSubscription) {
+      // Edit subscription logic goes here...
+      setSubscriptions((prev) =>
+        prev.map((sub) =>
+          sub.id === editingSubscription.id ? { ...sub, ...data } : sub,
+        ),
+      )
+    } else {
+      // Add subscription logic goes here
 
-    // Add subscription logic goes here
+      const newSubscription: Subscription = {
+        ...data,
+        id: crypto.randomUUID(),
+        createdAt: new Date().toISOString(),
+      }
 
-    const newSubscription: Subscription = {
-      ...data,
-      id: crypto.randomUUID(),
-      createdAt: new Date().toISOString(),
+      setSubscriptions((prev) => [...prev, newSubscription])
     }
-
-    setSubscriptions((prev) => [...prev, newSubscription])
   }
 
   return (
@@ -48,13 +79,18 @@ function IndexPage() {
       {viewMode === 'subscriptions' ? (
         <SubscriptionsView
           subscriptions={subscriptions}
+          counts={subCategoryCounts}
+          onEdit={handleEditSubscription}
           onAddClick={handleAddSubscription}
         />
       ) : (
         <ExpensesView />
       )}
 
-      <SubscriptionDialog onSubmit={handleSubmitSubscription} />
+      <SubscriptionDialog
+        subscription={editingSubscription}
+        onSubmit={handleSubmitSubscription}
+      />
     </>
   )
 }
