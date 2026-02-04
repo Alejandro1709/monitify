@@ -15,6 +15,7 @@ function IndexPage() {
   const editingSubscription = useSubscriptionsStore(
     (state) => state.editingSubscription,
   )
+
   const setEditingSubscription = useSubscriptionsStore(
     (state) => state.setEditingSubscription,
   )
