@@ -7,10 +7,11 @@ import type { Subscription, SubscriptionCategory } from '@/types/subscription'
 
 interface Props {
   subscriptions: Subscription[]
+  counts: Record<SubscriptionCategory | 'all', number>
   onAddClick: () => void
 }
 
-function SubscriptionsView({ subscriptions, onAddClick }: Props) {
+function SubscriptionsView({ subscriptions, counts, onAddClick }: Props) {
   const [selectedCategory, setSelectedCategory] = useState<
     SubscriptionCategory | 'all'
   >('all')
@@ -20,6 +21,7 @@ function SubscriptionsView({ subscriptions, onAddClick }: Props) {
       <CategoryFilter
         selectedCategory={selectedCategory}
         onCategoryChange={setSelectedCategory}
+        counts={counts}
       />
 
       {subscriptions.length === 0 ? (

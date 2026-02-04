@@ -3,10 +3,11 @@ import { categoryLabels, type SubscriptionCategory } from '@/types/subscription'
 
 interface Props {
   selectedCategory: SubscriptionCategory | 'all'
+  counts: Record<SubscriptionCategory | 'all', number>
   onCategoryChange: (category: SubscriptionCategory | 'all') => void
 }
 
-function CategoryFilter({ selectedCategory, onCategoryChange }: Props) {
+function CategoryFilter({ selectedCategory, counts, onCategoryChange }: Props) {
   const categories: (SubscriptionCategory | 'all')[] = [
     'all',
     'streaming',
@@ -24,10 +25,10 @@ function CategoryFilter({ selectedCategory, onCategoryChange }: Props) {
     <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
       {categories.map((category) => {
         const isSelected = selectedCategory === category
-        // const count = counts[category] || 0
+        const count = counts[category] || 0
         const label = category === 'all' ? 'Todas' : categoryLabels[category]
 
-        // if (category !== 'all' && count === 0) return null
+        if (category !== 'all' && count === 0) return null
 
         return (
           <motion.button
@@ -44,13 +45,15 @@ function CategoryFilter({ selectedCategory, onCategoryChange }: Props) {
             `}
           >
             {label}
-            <span
-              className={`ml-1.5 text-xs ${
-                isSelected ? 'opacity-80' : 'text-muted-foreground'
-              }`}
-            >
-              (4)
-            </span>
+            {count > 0 && (
+              <span
+                className={`ml-1.5 text-xs ${
+                  isSelected ? 'opacity-80' : 'text-muted-foreground'
+                }`}
+              >
+                ({count})
+              </span>
+            )}
           </motion.button>
         )
       })}
