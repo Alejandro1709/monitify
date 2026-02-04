@@ -9,14 +9,13 @@ function IndexPage() {
     'subscriptions',
   )
 
-  const [isSubDialogOpen, setIsSubDialogOpen] = useState<boolean>(true)
-  const [isExpDialogOpen, setIsExpDialogOpen] = useState<boolean>(true)
+  const [isSubDialogOpen, setIsSubDialogOpen] = useState<boolean>(false)
+  // const [isExpDialogOpen, setIsExpDialogOpen] = useState<boolean>(false)
 
   const handleOpenDialog = () => {
     if (viewMode === 'subscriptions') {
       setIsSubDialogOpen(true)
-    } else {
-      setIsExpDialogOpen(true)
+      return
     }
   }
 
