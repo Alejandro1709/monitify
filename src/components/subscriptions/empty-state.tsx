@@ -2,7 +2,11 @@ import { motion } from 'motion/react'
 import { CreditCard, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
-function EmptyState() {
+interface Props {
+  onAddClick: () => void
+}
+
+function EmptyState({ onAddClick }: Props) {
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
@@ -19,7 +23,7 @@ function EmptyState() {
         Agrega tu primera suscripción para comenzar a llevar el control de tus
         gastos recurrentes.
       </p>
-      <Button className="cursor-pointer" onClick={() => {}}>
+      <Button className="cursor-pointer" onClick={onAddClick}>
         <Plus className="w-4 h-4 mr-2" />
         Agregar suscripción
       </Button>

@@ -29,7 +29,7 @@ function IndexPage() {
       />
 
       {viewMode === 'subscriptions' ? (
-        <SubscriptionsView />
+        <SubscriptionsView onAddClick={handleOpenDialog} />
       ) : (
         <>
           <ExpensesView />

@@ -6,7 +6,11 @@ import SubscriptionCard from '@/components/subscriptions/subscription-card'
 import defaultSubscriptions from '@/data/subscriptions'
 import type { Subscription, SubscriptionCategory } from '@/types/subscription'
 
-function SubscriptionsView() {
+interface Props {
+  onAddClick: () => void
+}
+
+function SubscriptionsView({ onAddClick }: Props) {
   const [subscriptions, setSubscriptions] =
     useState<Subscription[]>(defaultSubscriptions)
 
@@ -22,7 +26,7 @@ function SubscriptionsView() {
       />
 
       {subscriptions.length === 0 ? (
-        <EmptyState />
+        <EmptyState onAddClick={onAddClick} />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <AnimatePresence mode="popLayout">

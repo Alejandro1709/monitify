@@ -15,7 +15,7 @@ interface Props {
 function SubscriptionDialog({ open, subscription, onOpenChange }: Props) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-125">
+      <DialogContent className="sm:max-w-125" aria-describedby="">
         <DialogHeader>
           <DialogTitle>
             {subscription ? 'Editar Suscripción' : 'Nueva Suscripción'}
