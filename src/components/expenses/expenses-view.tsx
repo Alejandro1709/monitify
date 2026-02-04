@@ -5,9 +5,12 @@ import EmptyState from '@/components/expenses/empty-state'
 import ExpenseCard from '@/components/expenses/expense-card'
 import type { Expense, ExpenseCategory } from '@/types/expense'
 
-function ExpensesView() {
-  const [expenses, setExpenses] = useState<Expense[]>([])
+interface Props {
+  expenses: Expense[]
+  onAddClick: () => void
+}
 
+function ExpensesView({ expenses, onAddClick }: Props) {
   const [selectedCategory, setSelectedCategory] = useState<
     ExpenseCategory | 'all'
   >('all')
@@ -20,7 +23,7 @@ function ExpensesView() {
       />
 
       {expenses.length === 0 ? (
-        <EmptyState />
+        <EmptyState onAddClick={onAddClick} />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <AnimatePresence mode="popLayout">

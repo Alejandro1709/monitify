@@ -1,17 +1,22 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import ExpensesView from '@/components/expenses/expenses-view'
 import SubscriptionsView from '@/components/subscriptions/subscriptions-view'
 import ToolBar from '@/components/toolbar'
 import SubscriptionDialog from '@/components/subscriptions/subscription-dialog'
+import ExpenseDialog from '@/components/expenses/expense-dialog'
 import { useViewModeStore } from '@/stores/useViewModeStore'
 import { useSubscriptionDialogStore } from '@/stores/useSubscriptionDialogStore'
 import { useSubscriptionsStore } from '@/stores/useSubscriptionsStore'
 import type { Subscription, SubscriptionCategory } from '@/types/subscription'
+import type { Expense } from '@/types/expense'
 
 function IndexPage() {
+  // View Mode
   const viewMode = useViewModeStore((state) => state.viewMode)
 
+  // Subscriptions
   const subscriptions = useSubscriptionsStore((state) => state.subscriptions)
+
   const editingSubscription = useSubscriptionsStore(
     (state) => state.editingSubscription,
   )
@@ -33,6 +38,10 @@ function IndexPage() {
   )
 
   const changeIsOpen = useSubscriptionDialogStore((state) => state.changeIsOpen)
+
+  const [isExpenseDialogOpen, setIsExpenseDialogOpen] = useState<boolean>(false)
+
+  const [expenses, setExpenses] = useState<Expense[]>([])
 
   const subCategoryCounts = useMemo(() => {
     const counts: Record<SubscriptionCategory | 'all', number> = {
@@ -58,6 +67,11 @@ function IndexPage() {
   const handleAddSubscription = () => {
     setEditingSubscription(null)
     changeIsOpen(true)
+  }
+
+  const handleAddExpense = () => {
+    // setEditingExpense(null)
+    setIsExpenseDialogOpen(true)
   }
 
   const handleEditSubscription = (subscription: Subscription) => {
@@ -93,7 +107,7 @@ function IndexPage() {
 
   return (
     <>
-      <ToolBar />
+      <ToolBar onChange={setIsExpenseDialogOpen} />
 
       {viewMode === 'subscriptions' ? (
         <SubscriptionsView
@@ -105,12 +119,17 @@ function IndexPage() {
           onAddClick={handleAddSubscription}
         />
       ) : (
-        <ExpensesView />
+        <ExpensesView expenses={expenses} onAddClick={handleAddExpense} />
       )}
 
       <SubscriptionDialog
         subscription={editingSubscription}
         onSubmit={handleSubmitSubscription}
+      />
+
+      <ExpenseDialog
+        isDialogOpen={isExpenseDialogOpen}
+        onChange={setIsExpenseDialogOpen}
       />
     </>
   )

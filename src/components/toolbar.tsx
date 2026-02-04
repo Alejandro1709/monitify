@@ -3,7 +3,11 @@ import ModeToggler from '@/components/mode-toggler'
 import { useViewModeStore } from '@/stores/useViewModeStore'
 import { useSubscriptionDialogStore } from '@/stores/useSubscriptionDialogStore'
 
-function ToolBar() {
+interface Props {
+  onChange: (open: boolean) => void
+}
+
+function ToolBar({ onChange }: Props) {
   const viewMode = useViewModeStore((state) => state.viewMode)
 
   const changeIsOpen = useSubscriptionDialogStore((state) => state.changeIsOpen)
@@ -21,7 +25,11 @@ function ToolBar() {
           Nueva Suscripción
         </Button>
       ) : (
-        <Button variant="outline" onClick={() => {}} className="cursor-pointer">
+        <Button
+          variant="outline"
+          onClick={() => onChange(true)}
+          className="cursor-pointer"
+        >
           Nuevo Gasto
         </Button>
       )}

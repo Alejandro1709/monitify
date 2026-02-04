@@ -2,7 +2,11 @@ import { motion } from 'motion/react'
 import { Plus, Receipt } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
-function EmptyState() {
+interface Props {
+  onAddClick: () => void
+}
+
+function EmptyState({ onAddClick }: Props) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -19,7 +23,7 @@ function EmptyState() {
         Comienza a registrar tus gastos diarios para llevar un mejor control de
         tu dinero.
       </p>
-      <Button onClick={() => {}} className="cursor-pointer">
+      <Button onClick={onAddClick} className="cursor-pointer">
         <Plus className="w-4 h-4" />
         Agregar primer gasto
       </Button>
