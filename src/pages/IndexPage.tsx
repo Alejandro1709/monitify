@@ -7,6 +7,7 @@ import ExpenseDialog from '@/components/expenses/expense-dialog'
 import { useViewModeStore } from '@/stores/useViewModeStore'
 import { useSubscriptionDialogStore } from '@/stores/useSubscriptionDialogStore'
 import { useSubscriptionsStore } from '@/stores/useSubscriptionsStore'
+import { useExpenseDialogStore } from '@/stores/useExpenseDialogStore'
 import type { Subscription, SubscriptionCategory } from '@/types/subscription'
 import type { Expense } from '@/types/expense'
 
@@ -39,7 +40,9 @@ function IndexPage() {
 
   const changeIsOpen = useSubscriptionDialogStore((state) => state.changeIsOpen)
 
-  const [isExpenseDialogOpen, setIsExpenseDialogOpen] = useState<boolean>(false)
+  const changeExpenseDialogIsOpen = useExpenseDialogStore(
+    (state) => state.changeIsOpen,
+  )
 
   const [expenses, setExpenses] = useState<Expense[]>([])
 
@@ -71,7 +74,7 @@ function IndexPage() {
 
   const handleAddExpense = () => {
     // setEditingExpense(null)
-    setIsExpenseDialogOpen(true)
+    changeExpenseDialogIsOpen(true)
   }
 
   const handleEditSubscription = (subscription: Subscription) => {
@@ -107,7 +110,7 @@ function IndexPage() {
 
   return (
     <>
-      <ToolBar onChange={setIsExpenseDialogOpen} />
+      <ToolBar />
 
       {viewMode === 'subscriptions' ? (
         <SubscriptionsView
@@ -127,10 +130,7 @@ function IndexPage() {
         onSubmit={handleSubmitSubscription}
       />
 
-      <ExpenseDialog
-        isDialogOpen={isExpenseDialogOpen}
-        onChange={setIsExpenseDialogOpen}
-      />
+      <ExpenseDialog />
     </>
   )
 }

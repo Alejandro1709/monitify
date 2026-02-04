@@ -2,15 +2,16 @@ import { Button } from '@/components/ui/button'
 import ModeToggler from '@/components/mode-toggler'
 import { useViewModeStore } from '@/stores/useViewModeStore'
 import { useSubscriptionDialogStore } from '@/stores/useSubscriptionDialogStore'
+import { useExpenseDialogStore } from '@/stores/useExpenseDialogStore'
 
-interface Props {
-  onChange: (open: boolean) => void
-}
-
-function ToolBar({ onChange }: Props) {
+function ToolBar() {
   const viewMode = useViewModeStore((state) => state.viewMode)
 
   const changeIsOpen = useSubscriptionDialogStore((state) => state.changeIsOpen)
+
+  const changeExpenseDialogIsOpen = useExpenseDialogStore(
+    (state) => state.changeIsOpen,
+  )
 
   return (
     <div className="flex flex-row justify-between items-center gap-4 mb-6">
@@ -27,7 +28,7 @@ function ToolBar({ onChange }: Props) {
       ) : (
         <Button
           variant="outline"
-          onClick={() => onChange(true)}
+          onClick={() => changeExpenseDialogIsOpen(true)}
           className="cursor-pointer"
         >
           Nuevo Gasto
