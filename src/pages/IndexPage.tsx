@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import ExpensesView from '@/components/expenses/expenses-view'
 import SubscriptionsView from '@/components/subscriptions/subscriptions-view'
 import ToolBar from '@/components/toolbar'
@@ -8,6 +8,7 @@ import { useViewModeStore } from '@/stores/useViewModeStore'
 import { useSubscriptionDialogStore } from '@/stores/useSubscriptionDialogStore'
 import { useSubscriptionsStore } from '@/stores/useSubscriptionsStore'
 import { useExpenseDialogStore } from '@/stores/useExpenseDialogStore'
+import { useExpensesStore } from '@/stores/useExpensesStore'
 import type { Subscription, SubscriptionCategory } from '@/types/subscription'
 import type { Expense, ExpenseCategory } from '@/types/expense'
 
@@ -44,7 +45,17 @@ function IndexPage() {
     (state) => state.changeIsOpen,
   )
 
-  const [expenses, setExpenses] = useState<Expense[]>([])
+  const expenses = useExpensesStore((state) => state.expenses)
+
+  const editingExpense = useExpensesStore((state) => state.editingExpense)
+
+  const setEditingExpense = useExpensesStore((state) => state.setEditingExpense)
+
+  const addExpense = useExpensesStore((state) => state.addExpense)
+
+  const updateExpense = useExpensesStore((state) => state.updateExpense)
+
+  const removeExpense = useExpensesStore((state) => state.removeExpense)
 
   const subCategoryCounts = useMemo(() => {
     const counts: Record<SubscriptionCategory | 'all', number> = {
@@ -90,7 +101,7 @@ function IndexPage() {
   }
 
   const handleAddExpense = () => {
-    // setEditingExpense(null)
+    setEditingExpense(null)
     changeExpenseDialogIsOpen(true)
   }
 
@@ -99,8 +110,14 @@ function IndexPage() {
     changeIsOpen(true)
   }
 
+  const handleEditExpense = (expense: Expense) => {
+    setEditingExpense(expense)
+    changeExpenseDialogIsOpen(true)
+  }
+
   const handleToggleStatus = (id: string) => {
     const subscription = subscriptions.find((s) => s.id === id)
+
     if (subscription) {
       updateSubscription(id, {
         status: subscription.status === 'active' ? 'paused' : 'active',
@@ -126,13 +143,18 @@ function IndexPage() {
   }
 
   const handleSubmitExpense = (data: Omit<Expense, 'id' | 'createdAt'>) => {
-    const newExpense: Expense = {
-      ...data,
-      id: crypto.randomUUID(),
-      createdAt: new Date().toISOString(),
-    }
+    if (editingExpense) {
+      updateExpense(editingExpense.id, data)
+      setEditingExpense(null)
+    } else {
+      const newExpense: Expense = {
+        ...data,
+        id: crypto.randomUUID(),
+        createdAt: new Date().toISOString(),
+      }
 
-    setExpenses((prev) => [...prev, newExpense])
+      addExpense(newExpense)
+    }
   }
 
   return (
@@ -152,6 +174,8 @@ function IndexPage() {
         <ExpensesView
           expenses={expenses}
           counts={expCategoryCounts}
+          onEdit={handleEditExpense}
+          onDelete={removeExpense}
           onAddClick={handleAddExpense}
         />
       )}
@@ -161,7 +185,7 @@ function IndexPage() {
         onSubmit={handleSubmitSubscription}
       />
 
-      <ExpenseDialog expense={null} onSubmit={handleSubmitExpense} />
+      <ExpenseDialog expense={editingExpense} onSubmit={handleSubmitExpense} />
     </>
   )
 }
