@@ -7,6 +7,8 @@ import {
   Pause,
   Trash2,
 } from 'lucide-react'
+import { format } from 'date-fns'
+import { es } from 'date-fns/locale'
 import {
   categoryLabels,
   currencySymbols,
@@ -35,6 +37,11 @@ function SubscriptionCard({
   onDelete,
   onToggleStatus,
 }: Props) {
+  const monthlyAmount =
+    subscription.billingCycle === 'annual'
+      ? subscription.amount / 12
+      : subscription.amount
+
   const getStatusVariant = () => {
     switch (subscription.status) {
       case 'active':
@@ -130,7 +137,7 @@ function SubscriptionCard({
           <div>
             <p className="text-2xl font-bold text-foreground">
               {currencySymbols[subscription.currency]}
-              20.00
+              {monthlyAmount.toFixed(2)}
               <span className="text-sm font-normal text-muted-foreground">
                 /mes
               </span>
@@ -146,7 +153,11 @@ function SubscriptionCard({
           <div className="text-right text-sm">
             <div className="flex items-center gap-1 text-muted-foreground">
               <Calendar className="h-3.5 w-3.5" />
-              <span>DATE</span>
+              <span>
+                {format(new Date(subscription.nextBillingDate), "d 'de' MMM", {
+                  locale: es,
+                })}
+              </span>
             </div>
             <div className="flex items-center gap-1 text-muted-foreground mt-1">
               <CreditCard className="h-3.5 w-3.5" />
