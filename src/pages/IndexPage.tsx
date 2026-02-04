@@ -58,9 +58,19 @@ function IndexPage() {
     setEditingSubscription(null)
     changeIsOpen(true)
   }
+
   const handleEditSubscription = (subscription: Subscription) => {
     setEditingSubscription(subscription)
     changeIsOpen(true)
+  }
+
+  const handleToggleStatus = (id: string) => {
+    const subscription = subscriptions.find((s) => s.id === id)
+    if (subscription) {
+      updateSubscription(id, {
+        status: subscription.status === 'active' ? 'paused' : 'active',
+      })
+    }
   }
 
   const handleSubmitSubscription = (
@@ -90,6 +100,7 @@ function IndexPage() {
           counts={subCategoryCounts}
           onEdit={handleEditSubscription}
           onDelete={removeSubscription}
+          onToggle={handleToggleStatus}
           onAddClick={handleAddSubscription}
         />
       ) : (

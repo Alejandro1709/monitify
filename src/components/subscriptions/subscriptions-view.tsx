@@ -11,6 +11,7 @@ interface Props {
   onAddClick: () => void
   onEdit: (subscription: Subscription) => void
   onDelete: (id: string) => void
+  onToggle: (id: string) => void
 }
 
 function SubscriptionsView({
@@ -18,6 +19,7 @@ function SubscriptionsView({
   counts,
   onEdit,
   onDelete,
+  onToggle,
   onAddClick,
 }: Props) {
   const [selectedCategory, setSelectedCategory] = useState<
@@ -43,7 +45,7 @@ function SubscriptionsView({
                 subscription={subscription}
                 onEdit={() => onEdit(subscription)}
                 onDelete={() => onDelete(subscription.id)}
-                onToggleStatus={() => {}}
+                onToggleStatus={() => onToggle(subscription.id)}
               />
             ))}
           </AnimatePresence>
