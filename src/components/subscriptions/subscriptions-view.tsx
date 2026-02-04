@@ -10,12 +10,16 @@ interface Props {
   counts: Record<SubscriptionCategory | 'all', number>
   onAddClick: () => void
   onEdit: (subscription: Subscription) => void
+  onDelete: (id: string) => void
+  onToggle: (id: string) => void
 }
 
 function SubscriptionsView({
   subscriptions,
   counts,
   onEdit,
+  onDelete,
+  onToggle,
   onAddClick,
 }: Props) {
   const [selectedCategory, setSelectedCategory] = useState<
@@ -40,8 +44,8 @@ function SubscriptionsView({
                 key={subscription.id}
                 subscription={subscription}
                 onEdit={() => onEdit(subscription)}
-                onDelete={() => {}}
-                onToggleStatus={() => {}}
+                onDelete={() => onDelete(subscription.id)}
+                onToggleStatus={() => onToggle(subscription.id)}
               />
             ))}
           </AnimatePresence>
