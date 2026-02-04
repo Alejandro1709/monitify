@@ -26,7 +26,10 @@ function SubscriptionDialog({ subscription, onSubmit }: Props) {
           </DialogTitle>
         </DialogHeader>
 
-        <CreateSubscriptionForm onSubmit={onSubmit} />
+        <CreateSubscriptionForm
+          subscription={subscription}
+          onSubmit={onSubmit}
+        />
       </DialogContent>
     </Dialog>
   )

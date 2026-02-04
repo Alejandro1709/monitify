@@ -9,9 +9,15 @@ interface Props {
   subscriptions: Subscription[]
   counts: Record<SubscriptionCategory | 'all', number>
   onAddClick: () => void
+  onEdit: (subscription: Subscription) => void
 }
 
-function SubscriptionsView({ subscriptions, counts, onAddClick }: Props) {
+function SubscriptionsView({
+  subscriptions,
+  counts,
+  onEdit,
+  onAddClick,
+}: Props) {
   const [selectedCategory, setSelectedCategory] = useState<
     SubscriptionCategory | 'all'
   >('all')
@@ -33,7 +39,7 @@ function SubscriptionsView({ subscriptions, counts, onAddClick }: Props) {
               <SubscriptionCard
                 key={subscription.id}
                 subscription={subscription}
-                onEdit={() => {}}
+                onEdit={() => onEdit(subscription)}
                 onDelete={() => {}}
                 onToggleStatus={() => {}}
               />

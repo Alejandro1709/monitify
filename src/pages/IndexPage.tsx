@@ -14,6 +14,9 @@ function IndexPage() {
   const [subscriptions, setSubscriptions] =
     useState<Subscription[]>(defaultSubscriptions)
 
+  const [editingSubscription, setEditingSubscription] =
+    useState<Subscription | null>(null)
+
   const subCategoryCounts = useMemo(() => {
     const counts: Record<SubscriptionCategory | 'all', number> = {
       all: subscriptions.length,
@@ -38,28 +41,35 @@ function IndexPage() {
   const changeIsOpen = useSubscriptionDialogStore((state) => state.changeIsOpen)
 
   const handleAddSubscription = () => {
-    // setEditingSubscription(null)
+    setEditingSubscription(null)
+    changeIsOpen(true)
+  }
+  const handleEditSubscription = (subscription: Subscription) => {
+    setEditingSubscription(subscription)
     changeIsOpen(true)
   }
 
   const handleSubmitSubscription = (
     data: Omit<Subscription, 'id' | 'createdAt'>,
   ) => {
-    // if (editingSubscription) {
-    //   updateSubscription(editingSubscription.id, data)
-    // } else {
-    //   addSubscription(data)
-    // }
+    if (editingSubscription) {
+      // Edit subscription logic goes here...
+      setSubscriptions((prev) =>
+        prev.map((sub) =>
+          sub.id === editingSubscription.id ? { ...sub, ...data } : sub,
+        ),
+      )
+    } else {
+      // Add subscription logic goes here
 
-    // Add subscription logic goes here
+      const newSubscription: Subscription = {
+        ...data,
+        id: crypto.randomUUID(),
+        createdAt: new Date().toISOString(),
+      }
 
-    const newSubscription: Subscription = {
-      ...data,
-      id: crypto.randomUUID(),
-      createdAt: new Date().toISOString(),
+      setSubscriptions((prev) => [...prev, newSubscription])
     }
-
-    setSubscriptions((prev) => [...prev, newSubscription])
   }
 
   return (
@@ -70,13 +80,17 @@ function IndexPage() {
         <SubscriptionsView
           subscriptions={subscriptions}
           counts={subCategoryCounts}
+          onEdit={handleEditSubscription}
           onAddClick={handleAddSubscription}
         />
       ) : (
         <ExpensesView />
       )}
 
-      <SubscriptionDialog onSubmit={handleSubmitSubscription} />
+      <SubscriptionDialog
+        subscription={editingSubscription}
+        onSubmit={handleSubmitSubscription}
+      />
     </>
   )
 }
