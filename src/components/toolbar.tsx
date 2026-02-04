@@ -6,19 +6,28 @@ interface Props {
   onModeChange: React.Dispatch<
     React.SetStateAction<'subscriptions' | 'expenses'>
   >
+  onAddClick: () => void
 }
 
-function ToolBar({ mode, onModeChange }: Props) {
+function ToolBar({ mode, onAddClick, onModeChange }: Props) {
   return (
     <div className="flex flex-row justify-between items-center gap-4 mb-6">
       <ModeToggler mode={mode} onModeChange={onModeChange} />
 
       {mode === 'subscriptions' ? (
-        <Button variant="outline" onClick={() => {}} className="cursor-pointer">
+        <Button
+          variant="outline"
+          onClick={onAddClick}
+          className="cursor-pointer"
+        >
           Nueva Suscripción
         </Button>
       ) : (
-        <Button variant="outline" onClick={() => {}} className="cursor-pointer">
+        <Button
+          variant="outline"
+          onClick={onAddClick}
+          className="cursor-pointer"
+        >
           Nuevo Gasto
         </Button>
       )}
