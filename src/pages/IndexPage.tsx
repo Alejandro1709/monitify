@@ -108,6 +108,16 @@ function IndexPage() {
     }
   }
 
+  const handleSubmitExpense = (data: Omit<Expense, 'id' | 'createdAt'>) => {
+    const newExpense: Expense = {
+      ...data,
+      id: crypto.randomUUID(),
+      createdAt: new Date().toISOString(),
+    }
+
+    setExpenses((prev) => [...prev, newExpense])
+  }
+
   return (
     <>
       <ToolBar />
@@ -130,7 +140,7 @@ function IndexPage() {
         onSubmit={handleSubmitSubscription}
       />
 
-      <ExpenseDialog />
+      <ExpenseDialog expense={null} onSubmit={handleSubmitExpense} />
     </>
   )
 }

@@ -37,15 +37,11 @@ export const expenseCategoryColors: Record<ExpenseCategory, string> = {
   other: '#6B7280',
 }
 
-export type Currency = 'USD' | 'EUR' | 'MXN' | 'ARS' | 'COP' | 'CLP'
+export type Currency = 'USD' | 'PEN'
 
 export const currencySymbols: Record<Currency, string> = {
   USD: '$',
-  EUR: '€',
-  MXN: '$',
-  ARS: '$',
-  COP: '$',
-  CLP: '$',
+  PEN: 'S/',
 }
 
 export interface Expense {
