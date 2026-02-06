@@ -26,6 +26,11 @@ function SubscriptionsView({
     SubscriptionCategory | 'all'
   >('all')
 
+  const filteredSubscriptions =
+    selectedCategory === 'all'
+      ? subscriptions
+      : subscriptions.filter((sub) => sub.category === selectedCategory)
+
   return (
     <div className="space-y-6">
       <CategoryFilter
@@ -39,7 +44,7 @@ function SubscriptionsView({
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <AnimatePresence mode="popLayout">
-            {subscriptions.map((subscription) => (
+            {filteredSubscriptions.map((subscription) => (
               <SubscriptionCard
                 key={subscription.id}
                 subscription={subscription}
