@@ -24,6 +24,11 @@ function ExpensesView({
     ExpenseCategory | 'all'
   >('all')
 
+  const filteredExpenses =
+    selectedCategory === 'all'
+      ? expenses
+      : expenses.filter((exp) => exp.category === selectedCategory)
+
   return (
     <div className="space-y-6">
       <ExpenseFilter
@@ -37,7 +42,7 @@ function ExpensesView({
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <AnimatePresence mode="popLayout">
-            {expenses.map((expense) => (
+            {filteredExpenses.map((expense) => (
               <ExpenseCard
                 key={expense.id}
                 expense={expense}
